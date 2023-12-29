@@ -1,14 +1,16 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function Page() {
-  const [data, setData] = useState({name: "初期値"})
+    const { data, error, isLoading } = useSWR('/api/hello', fetcher)
 
-  useEffect(() => {
-    const change = {name: "変更"}
-    setData(change)
-  }, [])
+    console.log(data)
 
-  return <h1>Hello, {data.name}</h1>
+    if (error) return <div>failed to load</div>
+    if (isLoading) return <div>loading</div>
+
+    return <div>hello {data.name}</div>
 }

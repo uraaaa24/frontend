@@ -1,10 +1,10 @@
 {
-    "printWidth": 128,
-    "singleQuote": true,
-    "semi": false,
-    "parser": "typescript",
-    "endOfLine": "lf",
-    "tabWidth": 4,
-    "useTabs": false,
-    "trailingComma": "none"
+  "printWidth": 128,
+  "singleQuote": true,
+  "semi": false,
+  "parser": "typescript",
+  "endOfLine": "lf",
+  "tabWidth": 4,
+  "useTabs": false,
+  "trailingComma": "none"
 }
