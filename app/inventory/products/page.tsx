@@ -1,6 +1,7 @@
 'use client'
 
 import productsData from '@/dummyData/products.json'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 type ProductData = {
@@ -29,6 +30,7 @@ export default function Page() {
                         <th>単価</th>
                         <th>説明</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +40,9 @@ export default function Page() {
                             <td>{data.name}</td>
                             <td>{data.price}</td>
                             <td>{data.description}</td>
+                            <td>
+                                <Link href={`/inventory/products/${data.id}`}>在庫管理</Link>
+                            </td>
                             <td>
                                 <button>更新・削除</button>
                             </td>
