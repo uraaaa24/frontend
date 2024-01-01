@@ -2,7 +2,7 @@
 
 import productsData from '@/dummyData/products.json'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type ProductData = {
     id: number
@@ -13,15 +13,32 @@ type ProductData = {
 
 export default function Page() {
     const [data, setData] = useState<Array<ProductData>>([])
+    const [shownNewRow, setShownNewRow] = useState(false)
 
     useEffect(() => {
         setData(productsData)
     }, [])
 
+    const handleShowNewRow = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault()
+        setShownNewRow(true)
+    }
+
+    const handleAddCancel = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault()
+        setShownNewRow(false)
+    }
+
+    const handleAdd = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault()
+        // バックエンドを使用した登録処理を呼ぶ
+        setShownNewRow(false)
+    }
+
     return (
         <>
             <h2>商品一覧</h2>
-            <button>商品を追加する</button>
+            <button onClick={handleShowNewRow}>商品を追加する</button>
             <table>
                 <thead>
                     <tr>
@@ -34,6 +51,26 @@ export default function Page() {
                     </tr>
                 </thead>
                 <tbody>
+                    {shownNewRow ? (
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" />
+                            </td>
+                            <td>
+                                <input type="number" />
+                            </td>
+                            <td>
+                                <input type="text" />
+                            </td>
+                            <td>
+                                <button onClick={handleAddCancel}>キャンセル</button>
+                                <button onClick={handleAdd}>登録する</button>
+                            </td>
+                        </tr>
+                    ) : (
+                        ''
+                    )}
                     {data.map((data) => (
                         <tr key={data.id}>
                             <td>{data.id}</td>
