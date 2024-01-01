@@ -5,20 +5,39 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 type ProductData = {
-    id: number
+    id: number | null
     name: string
     price: number
     description: string
 }
 
+type InputData = {
+    id: string
+    name: string
+    price: string
+    description: string
+}
+
 export default function Page() {
     const [data, setData] = useState<Array<ProductData>>([])
+    const [inputData, setInputData] = useState<InputData>({
+        id: '',
+        name: '',
+        price: '',
+        description: ''
+    })
     const [shownNewRow, setShownNewRow] = useState(false) // 新規登録処理、新規登録業の表示状態を保持
     const [editingRow, setEditingRow] = useState(0) // 新規登録処理、新規登録業の表示状態を保持
 
     useEffect(() => {
         setData(productsData)
     }, [])
+
+    // 登録データの値を更新
+    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, name } = event.target
+        setInputData({ ...inputData, [name]: value })
+    }
 
     const handleShowNewRow = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault()
@@ -39,6 +58,15 @@ export default function Page() {
     const handleEditRow: any = (id: number) => {
         setShownNewRow(false)
         setEditingRow(id)
+        const selectedProduct: ProductData = data.find((v) => {
+            v.id === id
+        }) as ProductData
+        setInputData({
+            id: id.toString(),
+            name: selectedProduct.name,
+            price: selectedProduct.price.toString(),
+            description: selectedProduct.description
+        })
     }
 
     const handleEditCancel: any = (id: number) => {
@@ -73,13 +101,13 @@ export default function Page() {
                         <tr>
                             <td></td>
                             <td>
-                                <input type="text" />
+                                <input type="text" name="name" onChange={handleInput} />
                             </td>
                             <td>
-                                <input type="number" />
+                                <input type="number" name="price" onChange={handleInput} />
                             </td>
                             <td>
-                                <input type="text" />
+                                <input type="text" name="description" onChange={handleInput} />
                             </td>
                             <td>
                                 <button onClick={(event) => handleAddCancel(event)}>キャンセル</button>
@@ -94,13 +122,18 @@ export default function Page() {
                             <tr key={data.id}>
                                 <td>{data.id}</td>
                                 <td>
-                                    <input type="text" defaultValue={data.name} />
+                                    <input type="text" value={inputData.name} name="name" onChange={handleInput} />
                                 </td>
                                 <td>
-                                    <input type="number" defaultValue={data.price} />
+                                    <input type="number" value={inputData.price} name="price" onChange={handleInput} />
                                 </td>
                                 <td>
-                                    <input type="text" defaultValue={data.description} />
+                                    <input
+                                        type="text"
+                                        value={inputData.description}
+                                        name="description"
+                                        onChange={handleInput}
+                                    />
                                 </td>
                                 <td></td>
                                 <td>
