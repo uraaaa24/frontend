@@ -1,7 +1,7 @@
 'use client'
 
 import inventoriesData from '@/dummyData/inventories.json'
-import productData from '@/dummyData/products.json'
+import productsData from '@/dummyData/products.json'
 import { useEffect, useState } from 'react'
 
 type ProductData = {
@@ -21,9 +21,7 @@ type InventoryData = {
     inventory: number
 }
 
-export default function Page() {
-    const params = { id: 1 }
-
+export default function Page({ params }: { params: { id: number } }) {
     const [product, setProduct] = useState<ProductData>({
         id: 0,
         name: '',
@@ -33,7 +31,7 @@ export default function Page() {
     const [data, setData] = useState<Array<InventoryData>>([])
 
     useEffect(() => {
-        const selectedProduct: ProductData = productData.find((v) => v.id === params.id) ?? {
+        const selectedProduct: ProductData = productsData.find((v) => v.id == params.id) ?? {
             id: 0,
             name: '',
             price: 0,
@@ -41,6 +39,7 @@ export default function Page() {
         }
         setProduct(selectedProduct)
         setData(inventoriesData)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
