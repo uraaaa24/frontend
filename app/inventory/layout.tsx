@@ -1,18 +1,108 @@
-import React from 'react'
+'use client'
 
-import styles from '@/app/inventory/products/styles.module.css'
+import { Logout as LogoutIcon, Menu as MenuIcon } from '@mui/icons-material'
+import {
+    AppBar,
+    Box,
+    Button,
+    Divider,
+    Drawer,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ThemeProvider,
+    Toolbar,
+    Typography,
+    createTheme
+} from '@mui/material'
+
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+
+declare module '@mui/material/styles' {
+    interface BreakpointOverrides {
+        xs: false
+        sm: false
+        md: false
+        lg: false
+        xl: false
+        mobile: true
+        desktop: true
+    }
+}
+
+const defaultTheme = createTheme({
+    breakpoints: {
+        values: {
+            mobile: 0,
+            desktop: 600
+        }
+    }
+})
 
 export default function InventoryLayout({ children }: { children: React.ReactNode }) {
+    const [open, setOpen] = useState(false)
+
+    const router = useRouter()
+
+    const handleLogout = () => {
+        router.replace('/login')
+    }
+
+    const toggleDrawer = (open: boolean) => {
+        setOpen(open)
+    }
+
     return (
-        <div className={styles.layout}>
-            <header className={styles.header}>ヘッダー</header>
-            <div className={styles.container}>
-                <aside className={styles.navbar}>サイドバー</aside>
-                <main className={styles.content}>
-                    <section>{children}</section>
-                </main>
-            </div>
-            <footer className={styles.footer}>フッター</footer>
-        </div>
+        <ThemeProvider theme={defaultTheme}>
+            <Box sx={{ display: 'flex' }}>
+                <AppBar position="fixed">
+                    <Toolbar>
+                        <IconButton onClick={() => toggleDrawer(true)}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                            在庫管理システム
+                        </Typography>
+                        <Button variant="contained" startIcon={<LogoutIcon />} onClick={() => handleLogout()}>
+                            ログアウト
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                <Drawer open={open} onClose={() => toggleDrawer(false)} anchor="left">
+                    <Box sx={{ width: 240 }}>
+                        <Toolbar />
+                        <Divider />
+                        <List>
+                            <ListItem component="a" href="/inventory/products" disablePadding>
+                                <ListItemButton>
+                                    <ListItemText primary="商品一覧"></ListItemText>
+                                </ListItemButton>
+                            </ListItem>
+                            <Divider />
+                            <ListItem component="a" href="/inventory/import_sales" disablePadding>
+                                <ListItemButton>
+                                    <ListItemText primary="売上一括登録"></ListItemText>
+                                </ListItemButton>
+                            </ListItem>
+                            <Divider />
+                        </List>
+                    </Box>
+                </Drawer>
+                <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px', width: '100%', background: 'white' }}>
+                    {children}
+                </Box>
+                <Box
+                    component="footer"
+                    sx={{ width: '100%', position: 'fixed', textAlign: 'center', bottom: 0, background: '#1976d2' }}
+                >
+                    <Typography variant="caption" color="white">
+                        ©2023 full stack web development
+                    </Typography>
+                </Box>
+            </Box>
+        </ThemeProvider>
     )
 }
