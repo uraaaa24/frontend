@@ -1,27 +1,32 @@
 'use client'
 
 import { Box, Button, Container, CssBaseline, TextField, ThemeProvider, Typography, createTheme } from '@mui/material'
+import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 type FormData = {
-    userName: string
+    username: string
     password: string
 }
 
 export default function Page() {
+    const [authError, setAuthError] = useState('')
+
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm()
+
     const router = useRouter()
 
     const defaultTheme = createTheme()
 
     const onSubmit = (event: any): void => {
         const data: FormData = {
-            userName: event.userName,
+            username: event.username,
             password: event.password
         }
 
@@ -29,7 +34,15 @@ export default function Page() {
     }
 
     const handleLogin = (data: FormData) => {
-        router.push('/inventory/products')
+        axios
+            .post('/api/inventory/login', data)
+            .then((response) => {
+                router.push('/inventory/products')
+            })
+            .catch((error) => {
+                console.log(error)
+                setAuthError('ユーザー名またはパスワードに誤りがあります。')
+            })
     }
 
     return (
@@ -48,16 +61,21 @@ export default function Page() {
                         ログイン
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+                        {authError && (
+                            <Typography variant="body2" color="error">
+                                {authError}
+                            </Typography>
+                        )}
                         <TextField
                             type="text"
-                            id="userName"
+                            id="username"
                             variant="filled"
                             label="ユーザー名（必須）"
                             fullWidth
                             margin="normal"
-                            {...register('userName', { required: '必須入力です。' })}
-                            error={Boolean(errors.userName)}
-                            helperText={errors.userName?.message?.toString() || ''}
+                            {...register('username', { required: '必須入力です。' })}
+                            error={Boolean(errors.username)}
+                            helperText={errors.username?.message?.toString() || ''}
                         />
                         <TextField
                             type="text"
