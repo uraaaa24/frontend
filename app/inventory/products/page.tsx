@@ -1,6 +1,5 @@
 'use client'
 
-import productsData from '@/dummyData/products.json'
 import {
     Add as AddIcon,
     Cancel as CancelIcon,
@@ -25,6 +24,7 @@ import {
     TextField,
     Typography
 } from '@mui/material'
+import axios from 'axios'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -60,7 +60,10 @@ export default function Page() {
     }
 
     useEffect(() => {
-        setData(productsData)
+        axios
+            .get('/api/inventory/products')
+            .then((res) => res.data)
+            .then((data) => setData(data))
     }, [open])
 
     // 登録データを保持

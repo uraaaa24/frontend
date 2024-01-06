@@ -1,7 +1,5 @@
 'use client'
 
-import inventoriesData from '@/dummyData/inventories.json'
-import productsData from '@/dummyData/products.json'
 import {
     Alert,
     AlertColor,
@@ -18,6 +16,7 @@ import {
     TextField,
     Typography
 } from '@mui/material'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -35,7 +34,7 @@ type FormData = {
 
 type InventoryData = {
     id: number
-    type: string
+    type: number
     date: string
     unit: number
     quantity: number
@@ -68,14 +67,28 @@ export default function PagePage({ params }: { params: { id: number } }) {
         setOpen(false)
     }
     useEffect(() => {
-        const selectedProduct: ProductData = productsData.find((v) => v.id == params.id) ?? {
-            id: 0,
-            name: '',
-            price: 0,
-            description: ''
-        }
-        setProduct(selectedProduct)
-        setData(inventoriesData)
+        axios.get(`/api/inventory/products/${params.id}`).then((response) => setProduct(response.data))
+        axios.get(`/api/inventory/inventories/${params.id}`).then((response) => {
+            const inventoryData: InventoryData[] = []
+            let key: number = 1
+            let inventory: number = 0
+
+            response.data.forEach((e: InventoryData) => {
+                // 売るときは在庫数から引く
+                inventory += e.type === 1 ? e.quantity : e.quantity * -1
+                const newElement = {
+                    id: key++,
+                    type: e.type,
+                    date: e.date,
+                    unit: e.unit,
+                    quantity: e.quantity,
+                    price: e.unit * e.quantity,
+                    inventory: inventory
+                }
+                inventoryData.unshift(newElement)
+            })
+            setData(inventoryData)
+        })
     }, [open, params.id])
 
     const onSubmit = (event: any): void => {
