@@ -105,10 +105,6 @@ export default function Page() {
     const handleAddCancel = () => {
         setId(0)
     }
-    const handleAdd = (data: ProductData) => {
-        result('success', '商品が登録されました')
-        setId(0)
-    }
 
     // 更新・削除処理
     const handleEditRow = (id: number | null) => {
@@ -120,15 +116,29 @@ export default function Page() {
             description: selectedProduct.description
         })
     }
+
     const handleEditCancel = () => {
         setId(0)
     }
-    const handleEdit = (data: ProductData) => {
-        result('success', '商品が更新されました')
+
+    const handleAdd = (data: ProductData) => {
+        axios.post('/api/inventory/products', data).then((response) => {
+            result('success', '商品が登録されました')
+        })
         setId(0)
     }
+
+    const handleEdit = (data: ProductData) => {
+        axios.put(`/api/inventory/products/${data.id}`, data).then((response) => {
+            result('success', '商品が更新されました')
+        })
+        setId(0)
+    }
+
     const handleDelete = (id: number) => {
-        result('success', '商品が削除されました')
+        axios.delete(`/api/inventory/products/${id}`).then((response) => {
+            result('success', '商品が削除されました')
+        })
         setId(0)
     }
 
