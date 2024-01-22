@@ -1,7 +1,7 @@
 'use client'
 
+import axios from '@/plugins/axios'
 import { Box, Button, Container, CssBaseline, TextField, ThemeProvider, Typography, createTheme } from '@mui/material'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

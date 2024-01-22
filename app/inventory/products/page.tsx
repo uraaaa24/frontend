@@ -1,5 +1,6 @@
 'use client'
 
+import axios from '@/plugins/axios'
 import {
     Add as AddIcon,
     Cancel as CancelIcon,
@@ -24,7 +25,6 @@ import {
     TextField,
     Typography
 } from '@mui/material'
-import axios from 'axios'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'

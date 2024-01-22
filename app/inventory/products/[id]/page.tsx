@@ -1,5 +1,6 @@
 'use client'
 
+import axios from '@/plugins/axios'
 import {
     Alert,
     AlertColor,
@@ -16,7 +17,6 @@ import {
     TextField,
     Typography
 } from '@mui/material'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
